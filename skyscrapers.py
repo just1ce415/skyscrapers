@@ -136,7 +136,20 @@ def check_columns(board: list):
     >>> check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    # CREATING REVERSED BOARD
+    reversed_board = []
+    for i in range(len(board)):
+        lined_colomn = []
+        for j in range(len(board[0])):
+            lined_colomn.append(board[j][i])
+        reversed_board.append(''.join(lined_colomn))
+    # CHECKING FOR DOUBLES
+    if not check_uniqueness_in_rows(reversed_board):
+        return False
+    # CHECKING FOR LINES
+    if not check_horizontal_visibility(reversed_board):
+        return False
+    return True
 
 
 def check_skyscrapers(input_path: str):
@@ -148,7 +161,11 @@ def check_skyscrapers(input_path: str):
     >>> check_skyscrapers("check.txt")
     True
     """
-    pass
+    board = read_input(input_path)
+    if (check_not_finished_board(board) and check_uniqueness_in_rows(board)
+        and check_horizontal_visibility(board) and check_columns(board)):
+        return True
+    return False
 
 
 if __name__ == "__main__":
