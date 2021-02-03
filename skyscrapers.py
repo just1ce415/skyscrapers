@@ -8,8 +8,8 @@ def read_input(path: str):
     Read game board file from path.
     Return list of str.
 
-    >>> read_input("check.txt")
-    ['***21**', '452453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']
+    >>> read_input("tests/check.txt")
+    ['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***']
     """
     board_lst = []
     with open(path, 'r', encoding='utf-8') as f_board:
@@ -38,8 +38,9 @@ def left_to_right_check(input_line: str, pivot: int):
     highest = 0
     visible_builds = 0
     for i in range(1, len(input_line) - 1):
-        if input_line[i] > highest:
-            highest = input_line[i]
+        current_height = int(input_line[i])
+        if current_height > highest:
+            highest = current_height
             visible_builds += 1
     if visible_builds == pivot:
         return True
@@ -80,12 +81,15 @@ def check_uniqueness_in_rows(board: list):
     """
     height_range = len(board[0]) - 2
     for line in board:
+        if line in (board[0], board[-1]):
+            continue
         # CHECKING EACH NUMBER IN HEIGHT-RANGE
         for i in range(1, height_range + 1):
             counter = 0
             for j in range(1, len(line) - 1):
-                if line[j] == i:
-                    counter += 1
+                if line[j].isdigit():
+                    if int(line[j]) == i:
+                        counter += 1
             if counter > 1:
                 return False
     return True
@@ -116,10 +120,15 @@ def check_horizontal_visibility(board: list):
             reversed_line += line[i]
         # CHECK
         if line[0] == '*':
-            if not left_to_right_check(reversed_line, int(line[-1])):
+            if not left_to_right_check(reversed_line, int(reversed_line[0])):
                 return False
-        if not left_to_right_check(line, int(line[0])):
-            return False
+        elif line[-1] == '*':
+            if not left_to_right_check(line, int(line[0])):
+                return False
+        else:
+            if (not left_to_right_check(reversed_line, int(reversed_line[0])) and
+                not left_to_right_check(line, int(line[0]))):
+                return False
     return True
 
 
@@ -158,7 +167,7 @@ def check_skyscrapers(input_path: str):
     Return True if the board status is compliant with the rules,
     False otherwise.
 
-    >>> check_skyscrapers("check.txt")
+    >>> check_skyscrapers("tests/check.txt")
     True
     """
     board = read_input(input_path)
@@ -169,4 +178,6 @@ def check_skyscrapers(input_path: str):
 
 
 if __name__ == "__main__":
-    print(check_skyscrapers("check.txt"))
+    import doctest
+    print(doctest.testmod())
+    #print(check_skyscrapers("tests/check.txt"))
