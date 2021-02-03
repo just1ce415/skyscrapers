@@ -37,7 +37,7 @@ def left_to_right_check(input_line: str, pivot: int):
     """
     highest = 0
     visible_builds = 0
-    for i in range(1, len(input_line)):
+    for i in range(1, len(input_line) - 1):
         if input_line[i] > highest:
             highest = input_line[i]
             visible_builds += 1
@@ -59,14 +59,17 @@ def check_not_finished_board(board: list):
     >>> check_not_finished_board(['***21**', '412453*', '423145*', '*5?3215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for line in board:
+        if line.find('?') != -1:
+            return False
+    return True
 
 
 def check_uniqueness_in_rows(board: list):
     """
     Check buildings of unique height in each row.
 
-    Return True if buildings in a row have unique length, False otherwise.
+    Return True if buildings in a row have unique height, False otherwise.
 
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     True
@@ -75,7 +78,17 @@ def check_uniqueness_in_rows(board: list):
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    height_range = len(board[0]) - 2
+    for line in board:
+        # CHECKING EACH NUMBER IN HEIGHT-RANGE
+        for i in range(1, height_range + 1):
+            counter = 0
+            for j in range(1, len(line) - 1):
+                if line[j] == i:
+                    counter += 1
+            if counter > 1:
+                return False
+    return True
 
 
 def check_horizontal_visibility(board: list):
@@ -83,8 +96,8 @@ def check_horizontal_visibility(board: list):
     Check row-wise visibility (left-right and vice versa)
 
     Return True if all horizontal hints are satisfiable,
-     i.e., for line 412453* , hint is 4, and 1245 are the four buildings
-      that could be observed from the hint looking to the right.
+    i.e., for line 412453* , hint is 4, and 1245 are the four buildings
+    that could be observed from the hint looking to the right.
 
     >>> check_horizontal_visibility(['***21**', '412453*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     True
@@ -93,7 +106,21 @@ def check_horizontal_visibility(board: list):
     >>> check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for line in board:
+        # THROW OUT UNNECESSARY CASE
+        if line[0] == '*' and line[-1] == '*':
+            continue
+        # REVERSING LINE
+        reversed_line = ''
+        for i in range(len(line) - 1, -1, -1):
+            reversed_line += line[i]
+        # CHECK
+        if line[0] == '*':
+            if not left_to_right_check(reversed_line, int(line[-1])):
+                return False
+        if not left_to_right_check(line, int(line[0])):
+            return False
+    return True
 
 
 def check_columns(board: list):
