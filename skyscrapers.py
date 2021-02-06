@@ -81,6 +81,7 @@ def check_uniqueness_in_rows(board: list):
     """
     height_range = len(board[0]) - 2
     for line in board:
+        # THROW OUT FIRST AND LAST LINE
         if line in (board[0], board[-1]):
             continue
         # CHECKING EACH NUMBER IN HEIGHT-RANGE
