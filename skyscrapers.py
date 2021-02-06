@@ -84,15 +84,11 @@ def check_uniqueness_in_rows(board: list):
         # THROW OUT FIRST AND LAST LINE
         if line in (board[0], board[-1]):
             continue
-        # CHECKING EACH NUMBER IN HEIGHT-RANGE
-        for i in range(1, height_range + 1):
-            counter = 0
-            for j in range(1, len(line) - 1):
-                if line[j].isdigit():
-                    if int(line[j]) == i:
-                        counter += 1
-            if counter > 1:
-                return False
+        # CHECKING UNIQUENESS VIA SET
+        non_stars = line.replace('*', '')
+        unique_set = set(non_stars)
+        if len(unique_set) != len(non_stars):
+            return False
     return True
 
 
