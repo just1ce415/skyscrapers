@@ -79,13 +79,12 @@ def check_uniqueness_in_rows(board: list):
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    height_range = len(board[0]) - 2
     for line in board:
         # THROW OUT FIRST AND LAST LINE
         if line in (board[0], board[-1]):
             continue
         # CHECKING UNIQUENESS VIA SET
-        non_stars = line.replace('*', '')
+        non_stars = line[1:-1].replace('*', '')
         unique_set = set(non_stars)
         if len(unique_set) != len(non_stars):
             return False
