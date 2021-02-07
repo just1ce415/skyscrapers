@@ -122,7 +122,7 @@ def check_horizontal_visibility(board: list):
             if not left_to_right_check(line, int(line[0])):
                 return False
         else:
-            if (not left_to_right_check(reversed_line, int(reversed_line[0])) and
+            if (not left_to_right_check(reversed_line, int(reversed_line[0])) or
                 not left_to_right_check(line, int(line[0]))):
                 return False
     return True
